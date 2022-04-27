@@ -18,17 +18,24 @@ filesNumber = length(stage_files);
     
 final_table = [];
 for i = 1:filesNumber
-    [result(i,:), table, ruletable, table2, kappa, pred_stage, output_reliab(i,:), pred_stage_reliab, low_reliability] = multi_scale_auto_staging_Siesta_v10_chun(feature_files(i), stage_files(i), OutputDir); %original(files(i).name(1:end-4));  %
+    
+    % 餵進去: 特徵、睡眠階段、輸出路徑
+    % 吐出來: 結果?、table?、ruletable?、table2、一致性?、預測階段?、信賴度?、預測階段信賴度(最後使用的睡眠階段)?、低信賴Epoch?
+    [result(i,:), table, ruletable, table2, kappa, pred_stage, output_reliab(i,:), pred_stage_reliab, low_reliability] = ...
+        multi_scale_auto_staging_Siesta_v10_chun(feature_files(i), stage_files(i), OutputDir);
+    
     hyp = load(fullfile(stage_files(i).folder,stage_files(i).name)); 
     totalruletable = ruletable + totalruletable;
     result_table = result_table + table;
     table11(i) = {table};
     table12(i) = {sp(table)};
     result_before = result_before + table2;     
+    
     hf = figure('outerposition', get(0, 'screensize'));
     hf = colordef(hf, 'white'); %Set color scheme
     hf.Color = 'w'; 
-    subplot(411); hold on;
+    
+    subplot(411); hold on; grid on;
     W = hyp == 0;
     R = hyp == -1;
     bar(R,'FaceColor', '#A2142F', 'BarWidth', 1)
@@ -43,7 +50,7 @@ for i = 1:filesNumber
     yticklabels({'N3', 'N2', 'N1', 'W', 'R'});
     title('human scoring');
     
-    subplot(412); hold on;
+    subplot(412); hold on; grid on;
     W = pred_stage_reliab == 0;
     R = pred_stage_reliab == 4;
     bar(R, 'FaceColor', '#A2142F', 'BarWidth', 1);
@@ -62,9 +69,8 @@ for i = 1:filesNumber
     end
     
     title('human-machine collaborative scoring');
-    hold on; grid on;
     ACC = length(find(hyp == pred_stage_reliab)) / length(hyp)*100;
-    epoch_length = length(hyp);
+
 end
 
 final_table(1:5,1:5) = result_table;

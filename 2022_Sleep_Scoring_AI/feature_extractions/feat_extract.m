@@ -44,7 +44,7 @@ feat(:, 21:23) = feat_extract_3_test(data, fs, ns);    %EMG
 % ======================================== %
 % Extract Features 3:
 % 21. EMG Mean amplitude
-% 22. 【未使用】
+% 22. 【未使用】Avg Amp M
 % 23. EEG spindle num(C3)
 % ======================================== %
 
@@ -94,6 +94,13 @@ feat(:, 46:49) = feat_extract_7_test(data, fs, ns);    %E2
 % 49. EOG spindle num
 % ======================================== %
 
-feat(:, 50:52) = feat_extract_8_test_new(data, fs, ns);    %E2
+feat(:, 50:52) = feat_extract_8_test_new(data, fs, ns);
+% ======================================== %
+% Extract Features 8:
+% 50. Arousal
+% 51. REM E1E2 反向眼動
+% 52. 22-35 EMG
+% ======================================== %
+
 feat = feat_nor_test(feat);
 csvwrite(strcat(OutputDir, Input_database.name(1:end-4), '_feature.dat'), feat);

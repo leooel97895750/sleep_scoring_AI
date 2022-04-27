@@ -4,10 +4,10 @@ function ret_result = feat_extract_1_test(ini_data,fs,ns)
 
 %%
 %2022¨ú®øµù¸Ñ
-ini_data=ini_data.data;
+ini_data = ini_data.data;
 
 if size(ini_data,1) < size(ini_data,2)
-    ini_data=ini_data';
+    ini_data = ini_data';
 end
 total = double(ini_data(:,[1 4 7 8 9]));
 eog_total = total(:,3);
@@ -131,7 +131,7 @@ for epoch_seq=1 : floor(L_total/epoch)
     end
     
     %%%  frequency mean & std  %%%
-    mult_vector = ones(times,1);  % for calculating total power
+    mult_vector = ones(times, 1);  % for calculating total power
     fre_hi = 77 ;
     
     %%%  sep f1 row or column  %%%
