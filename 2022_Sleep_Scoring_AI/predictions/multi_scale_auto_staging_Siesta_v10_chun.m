@@ -3,20 +3,12 @@ function [output, result_final, nn_result, result_before, Kappa_value, pred_stag
 
 tic
 
-AutostageDir = [OuputDir '\autostage_withsmoothing\'];
-if exist(AutostageDir, 'dir') ~= 7
-    mkdir(AutostageDir);
-end
-AllstageDir = [OuputDir '\allstage_withsmoothing\']; %a11stage
-if exist(AllstageDir, 'dir') ~= 7
-    mkdir(AllstageDir);
-end
-nodestageDir = [OuputDir '\nodestage_withsmoothing\']; %a11stage
-if exist(nodestageDir, 'dir') ~= 7
-	mkdir(nodestageDir);
+result_answer_dir = [OuputDir '\result_answer\'];
+if exist(result_answer_dir, 'dir') ~= 7
+    mkdir(result_answer_dir);
 end
 
-feat = load(fullfile(FeatureDir.folder,FeatureDir.name)); 
+feat = load(fullfile(FeatureDir.folder, FeatureDir.name)); 
 hyp = load(fullfile(StageDir.folder,StageDir.name)); 
 L = min(length(feat), length(hyp));
 feat = feat(1:L, :);
@@ -331,15 +323,17 @@ end
     auto_staging(pos_Mov_1) = 5;
 
     %%  Smoothing  %%%
-    auto_staging_mod1 = auto_staging; % without smoothing
-    %auto_staging_mod1 = post_staging_feat(auto_staging_mod1,feat); % with smoothing
+    %auto_staging_mod1 = auto_staging; % without smoothing
+    % 有小數點無法跑這個
+    %auto_staging_mod1 = post_staging_feat(auto_staging_mod1, feat); % with smoothing
     
     %% Movement Smoothing %%   
     auto_staging = mov_rej_v10(auto_staging); % without smoothing
-    auto_staging_mod1 = mov_rej_v10(auto_staging_mod1); % with smoothing
+    %auto_staging_mod1 = mov_rej_v10(auto_staging_mod1); % with smoothing
     
-    nodestage_result = [auto_staging, auto_staging_mod1];
-    csvwrite([nodestageDir, 'node_stage_', FeatureDir.name(1:13), '.dat'], nodestage_result);
+    nodestage_result = auto_staging;
+    %nodestage_result = [auto_staging, auto_staging_mod1];
+    %csvwrite([nodestageDir, 'node_stage_', FeatureDir.name(1:13), '.dat'], nodestage_result);
     
    %% Recover %%
     auto_staging(pos_wake_1) = 0;
@@ -372,12 +366,14 @@ end
     %% Movement Smoothing %%
     auto_staging = mov_rej_v10(auto_staging); % without smoothing
     auto_staging_mod1 = mov_rej_v10(auto_staging_mod1); % with smoothing
-    csvwrite([AutostageDir,'auto_',FeatureDir.name(1:13),'.dat'], auto_staging_mod1);
+    %csvwrite([AutostageDir,'auto_',FeatureDir.name(1:13),'.dat'], auto_staging_mod1);
     pred_stage = auto_staging_mod1;
     human_sco2 = mov_rej(human_sco);
-    
-    stage_result = [human_sco2, auto_staging, auto_staging_mod1];
-    csvwrite([AllstageDir,'allstage_',FeatureDir.name(1:13),'.dat'], stage_result);
+    raw_staging = auto_staging;
+    raw_staging_smoothing = auto_staging_mod1;
+    %final_output = [human_sco2, nodestage_result, raw_staging, raw_staging_smoothing];
+    %stage_result = [human_sco2, auto_staging, auto_staging_mod1];
+    %csvwrite([AllstageDir,'allstage_',FeatureDir.name(1:13),'.dat'], stage_result);
     
 
     %% without smoothing %%
@@ -549,11 +545,13 @@ end
         end
         if vote >= 2 || arousal(i) == 1
             low_reliability(count_low_reliability) = i;
-            pred_stage_reliab(i) = human_sco(i);
+            pred_stage_reliab(i) = human_sco(i) + 0.1;
             count_low_reliability  = count_low_reliability + 1;
         end
     end
-    csvwrite([AutostageDir, 'auto_reliab_', FeatureDir.name(1:13), '.dat'], pred_stage_reliab);
+    
+    final_output = [human_sco2, nodestage_result, raw_staging, raw_staging_smoothing, pred_stage_reliab];
+    csvwrite([result_answer_dir, FeatureDir.name, '.csv'], final_output);
    %% caulate result  
     stage_label=(0:5);
     for idx1=1:6

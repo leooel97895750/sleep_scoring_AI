@@ -1,5 +1,5 @@
 % smoothing algorithm
-function post_result = post_staging_feat(auto_staging,feat)
+function post_result = post_staging_feat(auto_staging, feat)
 
     [row_i,col_j] = size(feat);
     for seq_i=1:col_j
