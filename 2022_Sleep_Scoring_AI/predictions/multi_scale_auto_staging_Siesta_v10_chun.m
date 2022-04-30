@@ -246,9 +246,9 @@ for epoch_no = 1:length(feat)
                     if feat(epoch_no,5) > 0.19  && feat(epoch_no,10) > 0.51 && feat(epoch_no,37) > 0.43 && feat(epoch_no,6) < 0.33 && feat(epoch_no,20) < 0.2 && feat(epoch_no,23) < 0.25 && feat(epoch_no,25) < 0.3 && feat(epoch_no,27) < 0.6 && feat(epoch_no,49) < 0.3|| feat(epoch_no,51) > 0  % rule 7
                         if feat(epoch_no,15) < 0.7  && feat(epoch_no,16) > 0.01 && feat(epoch_no,21) < 0.15 && feat(epoch_no,22) < 0.4 %  rule 12
                             if feat(epoch_no,51) > 0 && feat(epoch_no,21) < 0.3
-                                auto_staging(epoch_no) = 11.1;
+                                auto_staging(epoch_no) = 11;
                             else
-                                auto_staging(epoch_no) = 11.2;
+                                auto_staging(epoch_no) = 16;
                             end
                         else
                             auto_staging(epoch_no) = 12; 
@@ -275,6 +275,7 @@ end
         end
     end
     %%  5-staged automatic staging accuracy  %%
+    node_only = auto_staging;
     pos_wake_1 = auto_staging == 3;
     pos_wake_2 = auto_staging == 15;
     
@@ -293,8 +294,8 @@ end
     pos_n3_1 = auto_staging == 9;
     
     pos_REM_1 = auto_staging == 5;
-    pos_REM_2_1 = auto_staging == 11.1;
-    pos_REM_2_2 = auto_staging == 11.2;
+    pos_REM_2_1 = auto_staging == 11;
+    pos_REM_2_2 = auto_staging == 16;
     
     pos_Mov_1 = auto_staging == -2;
         
@@ -317,8 +318,8 @@ end
     auto_staging(pos_n3_1) = 3.9;
     
     auto_staging(pos_REM_1) = 4.5;
-    auto_staging(pos_REM_2_1) = 4.111;
-    auto_staging(pos_REM_2_2) = 4.112;
+    auto_staging(pos_REM_2_1) = 4.11;
+    auto_staging(pos_REM_2_2) = 4.16;
     
     auto_staging(pos_Mov_1) = 5;
 
@@ -331,7 +332,6 @@ end
     auto_staging = mov_rej_v10(auto_staging); % without smoothing
     %auto_staging_mod1 = mov_rej_v10(auto_staging_mod1); % with smoothing
     
-    nodestage_result = auto_staging;
     %nodestage_result = [auto_staging, auto_staging_mod1];
     %csvwrite([nodestageDir, 'node_stage_', FeatureDir.name(1:13), '.dat'], nodestage_result);
     
@@ -550,7 +550,7 @@ end
         end
     end
     
-    final_output = [human_sco2, nodestage_result, raw_staging, raw_staging_smoothing, pred_stage_reliab];
+    final_output = [human_sco2, node_only, raw_staging, raw_staging_smoothing, pred_stage_reliab];
     csvwrite([result_answer_dir, FeatureDir.name, '.csv'], final_output);
    %% caulate result  
     stage_label=(0:5);
