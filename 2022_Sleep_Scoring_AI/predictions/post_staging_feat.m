@@ -70,7 +70,7 @@ function post_result = post_staging_feat(auto_staging, feat)
             %smooth N1
             if auto_staging_ini(epoch_no-2) == 0 & auto_staging_ini(epoch_no-1) == 4 & auto_staging_ini(epoch_no) == 4 & auto_staging_ini(epoch_no+1) == 4 & auto_staging_ini(epoch_no+2) == 2
                 tmp = [epoch_no-1 epoch_no epoch_no+1];
-                if feat(tmp,21) >0.15 
+                if feat(tmp,21) >0.15 %emg
                     auto_staging_ini(tmp) = 1;  %  wake,REM,REM,REM,n2 --> wake,n1,n1,n1,n2
                 end
             end
@@ -100,14 +100,14 @@ function post_result = post_staging_feat(auto_staging, feat)
                 auto_staging_ini(epoch_no-1) = 4 ;  %  REM,N1,REM --> REM,REM,REM
             end
             if auto_staging_ini(epoch_no-1) == 1 & auto_staging_ini(epoch_no-2) == 4 & auto_staging_ini(epoch_no) == 0 
-                %if feat(epoch_no-1,15) < 0.6 | feat(epoch_no-1,19) < 0.1 | feat(epoch_no-1,21) < 0.3 |feat(epoch_no-1,22) < 0.4 |feat(epoch_no-1,25) < 0.1 |feat(epoch_no-1,27) < 0.1 | feat(epoch_no-1,43) < 0.1 |feat(epoch_no-1,45) < 0.2 | feat(epoch_no-1,47) < 0.1 | feat(epoch_no-1,49) < 0.1 %feat(epoch_no-1,4) > 0.2  %remove real N2
+                if feat(epoch_no-1,15) < 0.6 | feat(epoch_no-1,19) < 0.1 | feat(epoch_no-1,21) < 0.3 |feat(epoch_no-1,22) < 0.4 |feat(epoch_no-1,25) < 0.1 |feat(epoch_no-1,27) < 0.1 | feat(epoch_no-1,43) < 0.1 |feat(epoch_no-1,45) < 0.2 | feat(epoch_no-1,47) < 0.1 | feat(epoch_no-1,49) < 0.1 %feat(epoch_no-1,4) > 0.2  %remove real N2
                     auto_staging_ini(epoch_no-1) = 4 ;  %  REM,N2,REM --> REM,REM,REM
-                %end
+                end
             end
             if auto_staging_ini(epoch_no-1) == 4 & auto_staging_ini(epoch_no-2) == 4 & auto_staging_ini(epoch_no) == 4 
-                %if feat(epoch_no-1,15) < 0.6 | feat(epoch_no-1,19) < 0.1 | feat(epoch_no-1,21) < 0.3 |feat(epoch_no-1,22) < 0.4 |feat(epoch_no-1,25) < 0.1 |feat(epoch_no-1,27) < 0.1 | feat(epoch_no-1,43) < 0.1 |feat(epoch_no-1,45) < 0.2 | feat(epoch_no-1,47) < 0.1 | feat(epoch_no-1,49) < 0.1 %feat(epoch_no-1,4) > 0.2  %remove real N2
+                if feat(epoch_no-1,15) < 0.6 | feat(epoch_no-1,19) < 0.1 | feat(epoch_no-1,21) < 0.3 |feat(epoch_no-1,22) < 0.4 |feat(epoch_no-1,25) < 0.1 |feat(epoch_no-1,27) < 0.1 | feat(epoch_no-1,43) < 0.1 |feat(epoch_no-1,45) < 0.2 | feat(epoch_no-1,47) < 0.1 | feat(epoch_no-1,49) < 0.1 %feat(epoch_no-1,4) > 0.2  %remove real N2
                     auto_staging_ini(epoch_no-1) = 4 ;  %  REM,N2,REM --> REM,REM,REM
-                %end
+                end
             end
             if epoch_no>10
 

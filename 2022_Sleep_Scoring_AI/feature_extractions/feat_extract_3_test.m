@@ -40,7 +40,16 @@ for epoch_seq=1 : floor(L_total/epoch)
     
 end
 feat_result(:,1:2) = feat_emg;
-feat_result(:,3) = TEO_STFT_PWR(total(:,1),fs,ns); % C3
+
+% signal abnormal 處理 (看兩者的訊號震幅，若差異大則選小的使用)
+c3_amp = mean(abs(diff(total(:,1))));
+c4_amp = mean(abs(diff(total(:,2))));
+if c3_amp > c4_amp
+    spindle_data = total(:,2);
+else
+    spindle_data = total(:,1);
+end
+feat_result(:,3) = TEO_STFT_PWR(spindle_data,fs,ns); % C3 or C4
 ret_result = feat_result;
 
 

@@ -1,4 +1,4 @@
-function [output, result_final, nn_result, result_before, Kappa_value, pred_stage, output_reliab,  pred_stage_reliab, low_reliability] = multi_scale_auto_staging_Siesta_v10_chun(FeatureDir, StageDir, OuputDir)
+function [output, result_final, nn_result, result_before, Kappa_value, raw_staging, pred_stage, output_reliab,  pred_stage_reliab, low_reliability] = multi_scale_auto_staging_Siesta_v10_chun(FeatureDir, StageDir, OuputDir)
 %% load data %%
 
 tic
@@ -182,6 +182,7 @@ for epoch_no = 1:length(feat)
             set_Mov = 1;
         end
     end
+    % 好像沒用到
     if feat(epoch_no,50) > 0 && feat(epoch_no,21) > 0.3 %C4F40-30
         auto_staging(epoch_no) = 15; 
         set_Aro=1;
@@ -523,7 +524,7 @@ end
 
         %Arousal
         if feat(i,50) > 0 
-            arousal(i-1:i+3) = 1;
+            arousal(i:i+1) = 1;
         end
     end
     % SWR(slow wave related)
@@ -545,6 +546,7 @@ end
         end
         if vote >= 2 || arousal(i) == 1
             low_reliability(count_low_reliability) = i;
+            % 因為這邊加了小數點，所以prediction那邊畫圖會變wake，要取個floor
             pred_stage_reliab(i) = human_sco(i) + 0.1;
             count_low_reliability  = count_low_reliability + 1;
         end

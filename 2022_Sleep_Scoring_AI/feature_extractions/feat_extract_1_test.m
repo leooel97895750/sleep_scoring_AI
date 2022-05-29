@@ -9,10 +9,11 @@ ini_data = ini_data.data;
 if size(ini_data,1) < size(ini_data,2)
     ini_data = ini_data';
 end
-total = double(ini_data(:,[1 4 7 8 9]));
-eog_total = total(:,3);
-emg_total = total(:,5);
-eeg_c3_total = total(:,1);
+total = double(ini_data(:, [1 2 7 8 9]));
+eog1 = total(:, 3);
+emg_total = total(:, 5);
+c3 = total(:, 1);
+c4 = total(:, 2);
 
 L_total = length(total);
 epoch = fs*30;
@@ -29,23 +30,39 @@ feat = zeros(floor(L_total/epoch),17);
 for epoch_seq=1 : floor(L_total/epoch)
     
     if epoch_seq == 1   %head
-        epoch_eog_total = eog_total(1 : epoch_seq*epoch + epoch_overlapping);
+        epoch_eog1 = eog1(1 : epoch_seq*epoch + epoch_overlapping);
         epoch_emg_total = emg_total(1 : epoch_seq*epoch + epoch_overlapping);
-        epoch_eeg_c3_total = eeg_c3_total(1 : epoch_seq*epoch + epoch_overlapping);
+        epoch_c3 = c3(1 : epoch_seq*epoch + epoch_overlapping);
+        epoch_c4 = c4(1 : epoch_seq*epoch + epoch_overlapping);
     elseif epoch_seq == floor(L_total/epoch)   %tail
-        epoch_eog_total = eog_total(1+(epoch_seq-1)*epoch - epoch_overlapping : epoch_seq*epoch);
+        epoch_eog1 = eog1(1+(epoch_seq-1)*epoch - epoch_overlapping : epoch_seq*epoch);
         epoch_emg_total = emg_total(1+(epoch_seq-1)*epoch - epoch_overlapping  : epoch_seq*epoch);
-        epoch_eeg_c3_total = eeg_c3_total(1+(epoch_seq-1)*epoch - epoch_overlapping  : epoch_seq*epoch);
+        epoch_c3 = c3(1+(epoch_seq-1)*epoch - epoch_overlapping  : epoch_seq*epoch);
+        epoch_c4 = c4(1+(epoch_seq-1)*epoch - epoch_overlapping  : epoch_seq*epoch);
     else
-        epoch_eog_total = eog_total(1+(epoch_seq-1)*epoch - epoch_overlapping  : epoch_seq*epoch + epoch_overlapping);
+        epoch_eog1 = eog1(1+(epoch_seq-1)*epoch - epoch_overlapping  : epoch_seq*epoch + epoch_overlapping);
         epoch_emg_total = emg_total(1+(epoch_seq-1)*epoch - epoch_overlapping  : epoch_seq*epoch + epoch_overlapping);
-        epoch_eeg_c3_total = eeg_c3_total(1+(epoch_seq-1)*epoch - epoch_overlapping  : epoch_seq*epoch + epoch_overlapping);
+        epoch_c3 = c3(1+(epoch_seq-1)*epoch - epoch_overlapping  : epoch_seq*epoch + epoch_overlapping);
+        epoch_c4 = c4(1+(epoch_seq-1)*epoch - epoch_overlapping  : epoch_seq*epoch + epoch_overlapping);
+    end
+
+    % signal abnormal 處理 (看兩者的訊號震幅，若差異大則選小的使用)
+
+    c3_amp = mean(abs(diff(epoch_c3)));
+    c4_amp = mean(abs(diff(epoch_c4)));
+    %c3_std = std(epoch_c3);
+    %c4_std = std(epoch_c4);
+    if c3_amp > c4_amp
+        eeg_data = epoch_c4;
+    else
+        eeg_data = epoch_c3;
     end
     
     
-    [Amp1,f1,t1,p1] = spectrogram(epoch_eeg_c3_total,window,noverlap,nfft,fs);
-    [Amp2,f2,t2] = spectrogram(epoch_eog_total,window,noverlap,nfft,fs);
-    [Amp3,f3,t3] = spectrogram(epoch_emg_total,window,noverlap,nfft,fs);
+    
+    [Amp1,f1,t1,p1] = spectrogram(eeg_data, window, noverlap, nfft, fs);
+    [Amp2,f2,t2] = spectrogram(epoch_eog1, window, noverlap, nfft, fs);
+    [Amp3,f3,t3] = spectrogram(epoch_emg_total, window, noverlap, nfft, fs);
     
     Amp1 = abs(Amp1);
     Amp2 = abs(Amp2);

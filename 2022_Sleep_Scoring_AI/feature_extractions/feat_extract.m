@@ -35,9 +35,9 @@ feat(:, 1:17) = feat_extract_1_test(data, fs, ns); %C3,E1,EMG
 feat(:, 18:20) = feat_extract_2_test(data, fs, ns);    %C3
 % ======================================== %
 % Extract Features 2:
-% 18. Alpha ratio
-% 19. Spindle ratio
-% 20. SWS ratio
+% 18. Alpha ratio 應該用O1
+% 19. Spindle ratio 應該用 C3
+% 20. SWS ratio 應該用 F3
 % ======================================== %
 
 feat(:, 21:23) = feat_extract_3_test(data, fs, ns);    %EMG
@@ -45,7 +45,7 @@ feat(:, 21:23) = feat_extract_3_test(data, fs, ns);    %EMG
 % Extract Features 3:
 % 21. EMG Mean amplitude
 % 22. 【未使用】Avg Amp M
-% 23. EEG spindle num(C3)
+% 23. EEG spindle num(C3) 應該用 C3
 % ======================================== %
 
 feat(:, 24:27) = feat_extract_4_test(data, fs, ns);    %E1
@@ -79,10 +79,10 @@ feat(:, 28:41) = feat_extract_5_test(data, fs, ns);     %F4,E2
 feat(:, 42:45) = feat_extract_6_test(data, fs, ns);    %F4
 % ======================================== %
 % Extract Features 6:
-% 42. Alpha ratio
-% 43. Spindle ratio
-% 44. SWS ratio
-% 45. EEG spindle num(F4)
+% 42. Alpha ratio 應該用 O2
+% 43. Spindle ratio 應該用 C4
+% 44. SWS ratio 應該用 F4
+% 45. EEG spindle num(F4) 應該用 C4
 % ======================================== %
 
 feat(:, 46:49) = feat_extract_7_test(data, fs, ns);    %E2
@@ -103,4 +103,4 @@ feat(:, 50:52) = feat_extract_8_test_new(data, fs, ns);
 % ======================================== %
 
 feat = feat_nor_test(feat);
-csvwrite(strcat(OutputDir, Input_database.name(1:end-4), '_feature.dat'), feat);
+csvwrite(strcat(OutputDir, Input_database.name(1:end-4), '.dat'), feat);

@@ -1,3 +1,5 @@
 *.mat
 *.edf
 *.asv
+*.dat
+*.csv
