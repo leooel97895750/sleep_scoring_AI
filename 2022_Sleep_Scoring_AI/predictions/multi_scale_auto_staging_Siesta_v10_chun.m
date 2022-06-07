@@ -1,8 +1,6 @@
 function [output, result_final, nn_result, result_before, Kappa_value, raw_staging, pred_stage, output_reliab,  pred_stage_reliab, low_reliability] = multi_scale_auto_staging_Siesta_v10_chun(FeatureDir, StageDir, OuputDir)
 %% load data %%
 
-tic
-
 result_answer_dir = [OuputDir '\result_answer\'];
 if exist(result_answer_dir, 'dir') ~= 7
     mkdir(result_answer_dir);
@@ -406,7 +404,7 @@ end
     result_accu = result_cor / sum(result_final_sum) * 100;
     result_accu = result_accu * 100 - (result_accu * 100 - round(result_accu * 100)); % 保留至小數點後兩位
     result_accu = result_accu/100;
-    disp(result_accu)
+    %disp(result_accu)
     for stage_i = 1:5
         ratio_result_final(:,stage_i) = result_final(:,stage_i) / result_final_sum(stage_i);
     end
@@ -419,7 +417,7 @@ end
     for stage_seq = 1:5
         ratio_result_seq(stage_seq) = ratio_result_final_2(stage_seq,stage_seq);
     end
-    disp(ratio_result_seq)                                   %print each stage agreement
+    %disp(ratio_result_seq)                                   %print each stage agreement
 
     nn_fi_result = nn_fi_result';
     nn_fi_mod1_result = nn_fi_mod1_result';
@@ -573,7 +571,7 @@ end
     result_accu = result_cor / sum(result_final_sum) * 100;
     result_accu = result_accu * 100 - (result_accu * 100 - round(result_accu * 100)); % 保留至小數點後兩位
     result_accu = result_accu/100;
-    disp(result_accu)
+    %disp(result_accu)
     for stage_i = 1:5
         ratio_result_final(:,stage_i) = result_final(:,stage_i) / result_final_sum(stage_i);
     end
@@ -586,7 +584,7 @@ end
     for stage_seq = 1:5
         ratio_result_seq(stage_seq) = ratio_result_final_2(stage_seq,stage_seq);
     end
-    disp(ratio_result_seq)                                   %print each stage agreement
+    %disp(ratio_result_seq)                                   %print each stage agreement
 
     nn_fi_result = nn_fi_result';
     nn_fi_mod1_result = nn_fi_mod1_result';
@@ -613,5 +611,4 @@ end
     
     output_reliab = [epoch_no, ratio_result_seq, result_accu, RJratio, Kappa_value];
     
-toc
 end

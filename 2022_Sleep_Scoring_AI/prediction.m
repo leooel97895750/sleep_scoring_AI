@@ -18,14 +18,21 @@ n2_agr = [];
 n3_agr = [];
 rem_agr = [];
 
-for i = 1:filesNumber
-    
+AHI5 = [60,52,53,47,48,66,9,19,3,34,58,63,27,61,44];
+AHI5_30 = [59,62,56,55,33,37,31,22,6,43,15,50,12,23];
+AHI30 = [26,41,11,8,10,30,36,29,51,16,5,42,14,24,20];
+
+for i = AHI30
+
+    feature_file = dir(join([InputDir, '2022feature\', string(i), '.dat'], ''));
+    stage_file = dir(join([InputDir '2022stage\' string(i) '.dat'], ''));
+
     % 餵進去: 特徵、睡眠階段、輸出路徑
     % 吐出來: 結果?、table?、ruletable?、table2、一致性?、預測階段?、信賴度?、預測階段信賴度(最後使用的睡眠階段)?、低信賴Epoch?
     [result(i,:), table, ruletable, table2, kappa, raw_staging, pred_stage, output_reliab(i,:), pred_stage_reliab, low_reliability] = ...
-        multi_scale_auto_staging_Siesta_v10_chun(feature_files(i), stage_files(i), OutputDir);
+        multi_scale_auto_staging_Siesta_v10_chun(feature_file, stage_file, OutputDir);
     
-    hyp = load(fullfile(stage_files(i).folder,stage_files(i).name)); 
+    hyp = load(fullfile(stage_file.folder,stage_file.name)); 
     
     hf = figure('outerposition', get(0, 'screensize'));
     hf = colordef(hf, 'white'); %Set color scheme
@@ -77,7 +84,6 @@ for i = 1:filesNumber
         second_block = patch([low_reliability(j), low_reliability(j)+1, low_reliability(j)+1, low_reliability(j)], [1 1 -3 -3], 'b');
         second_block.FaceAlpha = 0.3;
         second_block.EdgeAlpha = 0;
-        hold on; 
     end
     
     axis tight;
@@ -96,8 +102,13 @@ for i = 1:filesNumber
     rem_agr(end+1) = length(find(((hyp == -1) & (mystage == -1)) == 1)) / length(find(hyp == -1)) * 100;
     xlabel(string(feature_files(i).name)+" Agreement: "+string(agreement(end)));
 
+    disp(string(stage_file.name) + " Agreement: " + string(agreement(end)));
+
 end
 
 % agreement存起來
 final_output = [agreement; wake_agr; n1_agr; n2_agr; n3_agr; rem_agr];
-csvwrite([OutputDir, '\agreement', date, '_signal_abnormal_修改後.csv'], final_output);
+
+disp("Overall agreement: " + string(mean(agreement)));
+
+csvwrite([OutputDir, '\agreement', date, '_noramlization_修改後.csv'], final_output);

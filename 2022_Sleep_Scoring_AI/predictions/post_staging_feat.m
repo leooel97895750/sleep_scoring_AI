@@ -53,7 +53,20 @@ function post_result = post_staging_feat(auto_staging, feat)
              end
              if auto_staging_ini(epoch_no-1) == 0 & auto_staging_ini(epoch_no) == 2 & auto_staging_ini(epoch_no-2) == 2
                  auto_staging_ini(epoch_no-1) = 2;  %  n2,wake,n2  --> n2,n2,n2
-             end 
+             end
+             % new rule
+             if auto_staging_ini(epoch_no-2) == 0 & auto_staging_ini(epoch_no-1) == 3 & auto_staging_ini(epoch_no) == 0
+                 auto_staging_ini(epoch_no-1) = 0;  %  wake,n3,wake  --> wake,wake,wake
+             end
+             if auto_staging_ini(epoch_no-2) == 0 & auto_staging_ini(epoch_no-1) == 3 & auto_staging_ini(epoch_no) == 3 & auto_staging_ini(epoch_no+1) == 0
+                 auto_staging_ini(epoch_no-1) = 0;  %  wake,n3,wake  --> wake,wake,wake
+                 auto_staging_ini(epoch_no) = 0;
+             end
+             if auto_staging_ini(epoch_no-2) == 0 & auto_staging_ini(epoch_no-1) == 3 & auto_staging_ini(epoch_no) == 3 & auto_staging_ini(epoch_no+1) == 3 & auto_staging_ini(epoch_no+2) == 0
+                 auto_staging_ini(epoch_no-1) = 0;  %  wake,n3,wake  --> wake,wake,wake
+                 auto_staging_ini(epoch_no) = 0;
+                 auto_staging_ini(epoch_no+1) = 0;
+             end
 
             %smooth Wake
             if auto_staging_ini(epoch_no-2) == 0 & auto_staging_ini(epoch_no-1) == 2 & auto_staging_ini(epoch_no) == 2 & auto_staging_ini(epoch_no+1) == 2 & auto_staging_ini(epoch_no+2) == 0
