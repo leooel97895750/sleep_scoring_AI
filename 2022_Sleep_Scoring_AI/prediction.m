@@ -5,11 +5,6 @@ addpath('.\predictions');
 
 InputDir = 'G:\共用雲端硬碟\Sleep center data\auto_detection\sleep_scoring_AI\2022_Sleep_Scoring_AI\';
 OutputDir = 'G:\共用雲端硬碟\Sleep center data\auto_detection\sleep_scoring_AI\2022_Sleep_Scoring_AI\2022result';
-
-% 要注意feature_files跟stage_files順序一不一樣
-feature_files = dir([InputDir '2022feature\*.dat']); %load all .mat files in the folder
-stage_files = dir([InputDir '2022stage\*.dat']); %load all .mat files in the folder
-filesNumber = length(stage_files);
     
 agreement = [];
 wake_agr = [];
@@ -100,7 +95,7 @@ for i = AHI30
     n2_agr(end+1) = length(find(((hyp == 2) & (mystage == 2)) == 1)) / length(find(hyp == 2)) * 100;
     n3_agr(end+1) = length(find(((hyp == 3) & (mystage == 3)) == 1)) / length(find(hyp == 3)) * 100;
     rem_agr(end+1) = length(find(((hyp == -1) & (mystage == -1)) == 1)) / length(find(hyp == -1)) * 100;
-    xlabel(string(feature_files(i).name)+" Agreement: "+string(agreement(end)));
+    xlabel(string(feature_file.name)+" Agreement: "+string(agreement(end)));
 
     disp(string(stage_file.name) + " Agreement: " + string(agreement(end)));
 
