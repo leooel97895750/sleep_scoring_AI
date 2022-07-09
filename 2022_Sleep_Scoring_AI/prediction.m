@@ -17,7 +17,7 @@ AHI5 = [60,52,53,47,48,66,9,19,3,34,58,63,27,61,44];
 AHI5_30 = [59,62,56,55,33,37,31,22,6,43,15,50,12,23];
 AHI30 = [26,41,11,8,10,30,36,29,51,16,5,42,14,24,20];
 
-for i = AHI30
+for i = 1:120
 
     feature_file = dir(join([InputDir, '2022feature\', string(i), '.dat'], ''));
     stage_file = dir(join([InputDir '2022stage\' string(i) '.dat'], ''));
